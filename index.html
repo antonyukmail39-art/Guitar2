@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Академия Гитары | Обучение для начинающих</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/fontsource-inter@4.5.0/index.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(245, 158, 11, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(245, 158, 11, 0.1) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .chord-card, .pattern-card, .song-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .chord-card:hover, .pattern-card:hover, .song-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(245, 158, 11, 0.5);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+        }
+        .modal-enter {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        .modal-enter-active {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .modal-exit {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .modal-exit-active {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        .checkbox-custom:checked + div {
+            background-color: #f59e0b;
+            border-color: #f59e0b;
+        }
+        .checkbox-custom:checked + div svg {
+            display: block;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569; 
+        }
+        .string-line {
+            stroke: #64748b;
+            stroke-width: 2;
+        }
+        .fret-line {
+            stroke: #475569;
+            stroke-width: 2;
+        }
+        .fret-line.top {
+            stroke: #94a3b8;
+            stroke-width: 6;
+        }
+        .chord-badge {
+            transition: all 0.2s ease;
+        }
+        .chord-badge:hover {
+            transform: scale(1.1);
+            background-color: rgba(245, 158, 11, 0.2);
+            border-color: rgba(245, 158, 11, 0.6);
+            color: #fbbf24;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="text-slate-200 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="w-full py-6 px-4 sm:px-8 border-b border-slate-800/50 glass-panel sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/20">
+                    <svg class="w-6 h-6 text-slate-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-200 to-amber-500">Академия Гитары</h1>
+                    <p class="text-xs text-slate-400 font-medium tracking-wide">АККОРДЫ • ПЕРЕБОРЫ • ПЕСНИ</p>
+                </div>
+            </div>
+            <div class="hidden md:block text-sm text-slate-400 text-right">
+                <p>Нажмите на аккорд для подробной схемы</p>
+                <p class="text-amber-400/80">Полное описание доступно в карточке</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-8 py-12">
+        
+        <!-- Section 1: Chords -->
+        <div class="mb-16">
+            <h2 class="text-3xl font-bold text-white mb-3 flex items-center gap-3">
+                <span class="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center border border-amber-500/20 text-amber-400 text-sm font-bold">1</span>
+                Фундамент: 8 базовых аккордов
+            </h2>
+            <p class="text-slate-400 max-w-3xl mb-8 leading-relaxed">Эти аккорды являются основой для тысяч песен. Изучите правильную постановку пальцев, обратите внимание на советы и попробуйте сыграть указанные популярные композиции. Нажмите на карточку, чтобы увидеть полную информацию.</p>
+
+            <div id="chordsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Cards injected by JS -->
+            </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="w-full h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent my-16"></div>
+
+        <!-- Section 2: Fingerpicking -->
+        <div class="mb-16">
+            <h2 class="text-3xl font-bold text-white mb-3 flex items-center gap-3">
+                <span class="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center border border-amber-500/20 text-amber-400 text-sm font-bold">2</span>
+                8 Базовых Переборов
+            </h2>
+            <p class="text-slate-400 max-w-3xl mb-8 leading-relaxed">Перебор (арпеджио) — это техника извлечения звуков аккорда поочередно. Это придает музыке объем, мелодичность и профессиональное звучание. Освойте эти паттерны, чтобы играть 90% репертуара.</p>
+
+            <div id="patternsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Pattern cards injected by JS -->
+            </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="w-full h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent my-16"></div>
+
+        <!-- Section 3: Songs -->
+        <div class="mb-12">
+            <h2 class="text-3xl font-bold text-white mb-3 flex items-center gap-3">
+                <span class="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center border border-amber-500/20 text-amber-400 text-sm font-bold">3</span>
+                Практика: 8 песен для новичков
+            </h2>
+            <p class="text-slate-400 max-w-3xl mb-8 leading-relaxed">Примените изученные аккорды и переборы на практике. Эти 8 песен идеально подходят для старта: они используют только пройденные аккорды и простые ритмические рисунки. Нажмите на аккорд в карточке, чтобы быстро посмотреть его схему.</p>
+
+            <div id="songsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Song cards injected by JS -->
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full py-8 border-t border-slate-800/50 bg-slate-950/50">
+        <div class="max-w-7xl mx-auto px-4 text-center text-slate-500 text-sm">
+            <p>Практикуйтесь по 15-20 минут каждый день. Регулярность важнее длительности.</p>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="chordModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 sm:p-6">
+        <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
+        <div class="relative glass-panel rounded-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden shadow-2xl border border-slate-700/50 transform transition-all flex flex-col" id="modalContent">
+            
+            <button onclick="closeModal()" class="absolute top-4 right-4 p-2 rounded-full bg-slate-800/50 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors z-20">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
+            <div class="overflow-y-auto custom-scrollbar flex flex-col md:flex-row h-full">
+                <div class="w-full md:w-2/5 p-8 bg-slate-900/50 flex flex-col items-center justify-start border-b md:border-b-0 md:border-r border-slate-800">
+                    <h3 id="modalTitle" class="text-5xl font-bold text-amber-400 mb-2">Am</h3>
+                    <p id="modalFullName" class="text-xl text-slate-300 mb-6">Ля минор</p>
+                    <div id="svgContainer" class="w-full max-w-[260px] mb-8"></div>
+                    
+                    <div class="w-full space-y-4">
+                        <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+                            <div class="flex items-start gap-3">
+                                <svg class="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <div>
+                                    <h4 class="text-sm font-bold text-amber-200 mb-1">Совет новичку</h4>
+                                    <p id="modalTip" class="text-sm text-slate-300 leading-relaxed"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Популярные песни с этим аккордом</h4>
+                            <div id="modalSongs" class="flex flex-wrap gap-2"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-full md:w-3/5 p-8 flex flex-col">
+                    <div class="mb-8">
+                        <p id="modalDescription" class="text-lg text-slate-200 leading-relaxed mb-6"></p>
+                        <h4 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">Постановка пальцев</h4>
+                        <ul id="fingerGuide" class="space-y-3"></ul>
+                    </div>
+
+                    <div class="flex-grow">
+                        <h4 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">Упражнения для практики</h4>
+                        <div id="exercisesList" class="space-y-3"></div>
+                    </div>
+
+                    <div class="mt-8 pt-6 border-t border-slate-800">
+                        <button onclick="closeModal()" class="w-full py-3.5 px-6 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold transition-colors shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2">
+                            <span>Понятно, продолжить обучение</span>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chordsData = [
+            {
+                id: 'am', name: 'Am', fullName: 'Ля минор', positions: [-1, 0, 2, 2, 1, 0], fingers: [null, null, 2, 3, 1, null],
+                description: 'Один из самых важных и простых аккордов. Звучит грустно и мелодично. Это первый аккорд, который учат все гитаристы мира.',
+                tip: 'Следите, чтобы 1-й палец не задевал 1-ю струну, иначе она будет глушиться. Держите пальцы ближе к металлическому порожку лада, но не на нем.',
+                songs: ['Звезда по имени Солнце', 'Пачка сигарет', '30 лет'],
+                fingerGuide: ['Указательный палец (1) на 1-й лад 2-й струны.', 'Средний палец (2) на 2-й лад 4-й струны.', 'Безымянный палец (3) на 2-й лад 3-й струны.', '6-я струна не звучит (глушится).'],
+                exercises: ['Поставьте аккорд и проведите по всем струнам сверху вниз. Убедитесь, что каждая струна звучит чисто.', 'Снимите все пальцы, встряхните кисть, и поставьте аккорд снова за 1 секунду. Повторите 10 раз.', 'Попробуйте переключиться с аккорда Am на аккорд E и обратно 5 раз медленно.']
+            },
+            {
+                id: 'dm', name: 'Dm', fullName: 'Ре минор', positions: [-1, 0, 0, 2, 3, 1], fingers: [null, null, null, 2, 3, 1],
+                description: 'Мягкий и задумчивый аккорд. Часто используется в паре с Am и E, создавая классическую гармоническую последовательность.',
+                tip: 'Самая частая ошибка — задевание 5-й и 6-й струн. Большой палец левой руки должен обхватывать гриф сверху, чтобы глушить 6-ю струну.',
+                songs: ['Пачка сигарет', '30 лет', 'Тополиный пух'],
+                fingerGuide: ['Указательный палец (1) на 1-й лад 1-й струны.', 'Средний палец (2) на 2-й лад 3-й струны.', 'Безымянный палец (3) на 3-й лад 2-й струны.', '4-я и 5-я струны звучат открытыми, 6-я глушится.'],
+                exercises: ['Проиграйте аккорд по одной струне снизу вверх (от 4-й к 1-й), проверяя чистоту звука.', 'Поставьте аккорд и попробуйте сыграть простой перебор: Бас - 3 - 2 - 1 - 2 - 3.', 'Переключение: Dm → Am → Dm (10 раз).']
+            },
+            {
+                id: 'e', name: 'E', fullName: 'Ми мажор', positions: [0, 2, 2, 1, 0, 0], fingers: [null, 2, 3, 1, null, null],
+                description: 'Мощный и открытый аккорд. Звучит ярко, уверенно и полно благодаря тому, что звучат все 6 струн.',
+                tip: 'Держите пальцы округлыми, как будто держите яблоко. Это предотвратит глушение соседних струн.',
+                songs: ['Звезда по имени Солнце', 'Пачка сигарет', 'Кукушка'],
+                fingerGuide: ['Указательный палец (1) на 1-й лад 3-й струны.', 'Средний палец (2) на 2-й лад 5-й струны.', 'Безымянный палец (3) на 2-й лад 4-й струны.', 'Все 6 струн звучат открыто.'],
+                exercises: ['Сыграйте аккорд и прислушайтесь к гудению всех 6 струн. Добейтесь равномерного звучания.', 'Попробуйте сыграть басовую ноту (6-я струна) большим пальцем, а затем провести по остальным струнам.', 'Переключение: E → Am → E (10 раз).']
+            },
+            {
+                id: 'c', name: 'C', fullName: 'До мажор', positions: [-1, 3, 2, 0, 1, 0], fingers: [null, 3, 2, null, 1, null],
+                description: 'Светлый и радостный аккорд. Требует небольшой растяжки пальцев, но является одним из самых используемых в поп-музыке.',
+                tip: 'Если 3-я струна глушится, немного выгните указательный палец и проверьте, не касается ли он 3-й струны своим кончиком или подушечкой.',
+                songs: ['Звезда по имени Солнце', 'Районы-кварталы', 'Выхода нет'],
+                fingerGuide: ['Указательный палец (1) на 1-й лад 2-й струны.', 'Средний палец (2) на 2-й лад 4-й струны.', 'Безымянный палец (3) на 3-й лад 5-й струны.', 'Держите пальцы ближе к ладовым порожкам, но не на них.'],
+                exercises: ['Проверьте каждую струну отдельно. Особое внимание уделите 3-й и 1-й струнам.', 'Медленное переключение: C → G → C (5 раз). Следите за экономией движений.', 'Попробуйте сыграть арпеджио: 5-я, 3-я, 2-я, 1-я, 2-я, 3-я струны по очереди.']
+            },
+            {
+                id: 'g', name: 'G', fullName: 'Соль мажор', positions: [3, 2, 0, 0, 0, 3], fingers: [2, 1, null, null, null, 4],
+                description: 'Один из самых популярных аккордов в музыке. Звучит полно и объемно. Существует несколько вариантов постановки пальцев.',
+                tip: 'Мы используем вариант с мизинцем на 1-й струне. Это облегчает переход к аккорду C (До мажор), так как безымянный палец уже свободен.',
+                songs: ['Районы-кварталы', 'Оранжевое настроение', 'Выхода нет'],
+                fingerGuide: ['Указательный палец (1) на 2-й лад 5-й струны.', 'Средний палец (2) на 3-й лад 6-й струны.', 'Мизинец (4) на 3-й лад 1-й струны.', '4-я, 3-я и 2-я струны звучат открытыми.'],
+                exercises: ['Поставьте аккорд и проведите по всем 6 струнам. Звук должен быть богатым и без дребезжания.', 'Упражнение на растяжку: поставьте G, затем снимите только 1-й и 2-й пальцы, затем верните их.', 'Переключение: G → D → G (10 раз).']
+            },
+            {
+                id: 'em', name: 'Em', fullName: 'Ми минор', positions: [0, 2, 2, 0, 0, 0], fingers: [null, 2, 3, null, null, null],
+                description: 'Самый простой аккорд для начинающих. Используется всего два пальца, но звучит очень глубоко и эмоционально.',
+                tip: 'Несмотря на простоту, следите, чтобы пальцы не заваливались и не глушили соседние струны. Держите их вертикально.',
+                songs: ['Что такое осень', 'Скованные одной цепью'],
+                fingerGuide: ['Средний палец (2) на 2-й лад 5-й струны.', 'Безымянный палец (3) на 2-й лад 4-й струны.', 'Все остальные струны звучат открытыми.', 'Держите пальцы округлыми.'],
+                exercises: ['Сыграйте аккорд и дайте ему звучать 4 такта, прислушиваясь к затуханию звука.', 'Попробуйте сыграть бас (6-я струна), затем 4-я, 3-я, 2-я, 3-я, 4-я струны по очереди.', 'Переключение: Em → Am → Em (10 раз).']
+            },
+            {
+                id: 'a', name: 'A', fullName: 'Ля мажор', positions: [-1, 0, 2, 2, 2, 0], fingers: [null, null, 1, 2, 3, null],
+                description: 'Яркий и звонкий аккорд. Пальцы располагаются на одной линии, что требует аккуратности, чтобы не заглушить соседние струны.',
+                tip: 'Попробуйте ставить все три пальца одновременно, а не по очереди. Это значительно ускорит вашу игру в будущем.',
+                songs: ['Оранжевое настроение', 'Группа крови'],
+                fingerGuide: ['Указательный палец (1) на 2-й лад 4-й струны.', 'Средний палец (2) на 2-й лад 3-й струны.', 'Безымянный палец (3) на 2-й лад 2-й струны.', 'Постарайтесь поставить все три пальца одновременно.'],
+                exercises: ['Поставьте все три пальца одновременно на 2-й лад. Проверьте чистоту каждой из 5 звучащих струн.', 'Попробуйте вариант постановки: все три пальца на 2-м ладу, но на 2-й, 3-й и 4-й струнах.', 'Переключение: A → D → A (10 раз).']
+            },
+            {
+                id: 'd', name: 'D', fullName: 'Ре мажор', positions: [-1, -1, 0, 2, 3, 2], fingers: [null, null, null, 1, 3, 2],
+                description: 'Треугольный аккорд. Звучит только на 4-х верхних струнах. Светлый и мелодичный, часто завершает музыкальные фразы.',
+                tip: 'Большой палец левой руки должен лежать на верхней грани грифа, чтобы случайно не задеть 5-ю и 6-ю струны.',
+                songs: ['Звезда по имени Солнце', 'Оранжевое настроение', 'Выхода нет'],
+                fingerGuide: ['Указательный палец (1) на 2-й лад 3-й струны.', 'Средний палец (2) на 2-й лад 1-й струны.', 'Безымянный палец (3) на 3-й лад 2-й струны.', '5-я и 6-я струны не звучат (глушатся).'],
+                exercises: ['Сыграйте только по 4-м верхним струнам. Убедитесь, что они звучат чисто и громко.', 'Поставьте аккорд, оторвите руку от грифа и поставьте снова, стараясь сразу попасть в форму треугольника.', 'Переключение: D → G → D (10 раз).']
+            }
+        ];
+
+        const pickingPatterns = [
+            { id: 1, name: 'Простая четверка', description: 'Самый легкий перебор. Идеально подходит для медленных, лиричных песен. Основа для всех остальных переборов.', sequence: ['Бас', '3', '2', '1'], fingers: ['Большой (p)', 'Указательный (i)', 'Средний (m)', 'Безымянный (a)'], tip: 'Большой палец играет басовую струну аккорда (для Am это 5-я, для E это 6-я).' },
+            { id: 2, name: 'Классическая шестерка', description: 'Самый популярный и универсальный перебор. Подходит для 80% дворовых и эстрадных песен.', sequence: ['Бас', '3', '2', '1', '2', '3'], fingers: ['Большой', 'Указательный', 'Средний', 'Безымянный', 'Средний', 'Указательный'], tip: 'Старайтесь играть равномерно, как метроном. Не торопитесь на возврате (2-3).' },
+            { id: 3, name: 'Восьмерка', description: 'Более насыщенный и длинный перебор. Отлично звучит в балладах и романсах, заполняет музыкальное пространство.', sequence: ['Бас', '3', '2', '1', '2', '3', '2', '1'], fingers: ['Большой', 'Указ.', 'Средний', 'Безым.', 'Средний', 'Указ.', 'Средний', 'Безым.'], tip: 'Следите, чтобы большой палец не спешил. Он задает ритм и пульс всему перебору.' },
+            { id: 4, name: 'Альтернирующий бас', description: 'Делает вашу игру более профессиональной и объемной. Басовая нота чередуется между двумя нижними струнами.', sequence: ['Бас(ниж.)', '3', '2', 'Бас(верх.)', '3', '2'], fingers: ['Большой', 'Указательный', 'Средний', 'Большой', 'Указательный', 'Средний'], tip: 'Для аккорда Am: сначала 5-я струна, затем 4-я. Для аккорда E: сначала 6-я, затем 5-я.' },
+            { id: 5, name: 'Вальсовый (3/4)', description: 'Используется для песен в размере три четверти (вальс). Имеет характерный ритм "раз-два-три".', sequence: ['Бас-3-2', 'Бас-3-1', 'Бас-3-2'], fingers: ['Б-У-С', 'Б-У-Без', 'Б-У-С'], tip: 'Четко разделяйте три доли. Первая доля (с басом) всегда немного акцентирована.' },
+            { id: 6, name: 'С акцентом на мелодию', description: 'Позволяет выделить мелодию, которая часто находится на первой (самой тонкой) струне, поверх аккомпанемента.', sequence: ['Бас', '3', '2', '1 (акцент)', '2', '3'], fingers: ['Большой', 'Указательный', 'Средний', 'Безымянный', 'Средний', 'Указательный'], tip: 'Сыграйте 1-ю струну чуть сильнее остальных (потяните ноготь), чтобы она "пела" над остальными звуками.' },
+            { id: 7, name: 'Спаренная четверка', description: 'Динамичный вариант для более быстрых песен. Два раза подряд играется простая четверка с возможным чередованием баса.', sequence: ['Бас', '3', '2', '1', 'Бас', '3', '2', '1'], fingers: ['Б-У-С-Без', 'Б-У-С-Без'], tip: 'Можно менять басовую струну во второй четверке для создания эффекта альтернирующего баса.' },
+            { id: 8, name: 'Нисходящее арпеджио', description: 'Красивый прием, когда струны перебираются по порядку сверху вниз. Создает эффект "водопада" звуков.', sequence: ['Бас', '4', '3', '2', '1'], fingers: ['Большой', 'Указательный', 'Средний', 'Безымянный', 'Мизинец'], tip: 'Идеально подходит для аккордов D и Dm, где звучат 4 верхние струны. Играйте очень плавно и равномерно.' }
+        ];
+
+        const songsData = [
+            { title: "Звезда по имени Солнце", artist: "Кино", difficulty: "Легко", chords: ["Am", "C", "D", "E"], progression: "Am → C → D → E (2 раза)", tip: "Используйте простой бой 'Вниз-Вниз-Вверх-Вверх-Вниз-Вверх'. Меняйте аккорды каждые 2 такта. Это самая важная песня для отработки перехода C → D." },
+            { title: "Пачка сигарет", artist: "Кино", difficulty: "Легко", chords: ["Am", "Dm", "E"], progression: "Am → Dm → E → E", tip: "Отлично звучит с перебором 'Шестерка' (Бас-3-2-1-2-3). Следите за чистым звуком на аккорде Dm, не задевая 6-ю струну." },
+            { title: "30 лет", artist: "Сектор Газа", difficulty: "Легко", chords: ["Am", "Dm", "E"], progression: "Am → Dm → E → Am", tip: "Энергичный бой. Акцент на первую долю каждого такта. Аккорд E играйте мощно, по всем 6 струнам, чтобы создать драйв." },
+            { title: "Тополиный пух", artist: "Иванушки Int.", difficulty: "Легко", chords: ["Am", "Dm", "E"], progression: "Am → Dm → E → Am", tip: "Медленный темп. Идеально для отработки плавного и бесшумного переключения между Am и Dm без отрыва руки от грифа." },
+            { title: "Оранжевое настроение", artist: "Чайф", difficulty: "Средне", chords: ["D", "G", "A"], progression: "D → G → A → D", tip: "Солнечный мажорный звук. Используйте аккорд A (Ля мажор) и следите, чтобы пальцы не глушили соседние струны. Играйте бодро." },
+            { title: "Районы-кварталы", artist: "Звери", difficulty: "Средне", chords: ["C", "G", "Am", "E"], progression: "C → G → Am → E", tip: "Быстрый темп. Тренируйте переход C → G заранее. Можно использовать упрощенный бой только вниз на первые порах, чтобы успевать менять аккорды." },
+            { title: "Кукушка", artist: "Кино / П. Гагарина", difficulty: "Легко", chords: ["Am", "C", "D", "E"], progression: "Am → C → D → E", tip: "Та же прогрессия, что и в 'Звезде по имени Солнце', но играется более размеренно, широко и с чувством. Отлично подходит для перебора 'Восьмерка'." },
+            { title: "Выхода нет", artist: "Сплин", difficulty: "Средне", chords: ["Am", "C", "G", "D"], progression: "Am → C → G → D", tip: "Упрощенная версия без баррэ. Играйте перебором 'Восьмерка' или 'Шестерка' для создания характерного атмосферного и меланхоличного звучания." }
+        ];
+
+        function generateChordSVG(chord) {
+            const width = 260;
+            const height = 320;
+            const startX = 35;
+            const startY = 50;
+            const stringSpacing = 38;
+            const fretSpacing = 48;
+            
+            let svg = `<svg width="100%" height="100%" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">`;
+            for (let i = 0; i <= 4; i++) {
+                const y = startY + (i * fretSpacing);
+                const isTop = i === 0;
+                svg += `<line x1="${startX}" y1="${y}" x2="${startX + (5 * stringSpacing)}" y2="${y}" class="${isTop ? 'fret-line top' : 'fret-line'}" />`;
+            }
+            for (let i = 0; i < 6; i++) {
+                const x = startX + (i * stringSpacing);
+                svg += `<line x1="${x}" y1="${startY}" x2="${x}" y2="${startY + (4 * fretSpacing)}" class="string-line" />`;
+                const tuning = ['E', 'A', 'D', 'G', 'B', 'e'];
+                svg += `<text x="${x}" y="${startY + (4 * fretSpacing) + 24}" fill="#64748b" font-size="13" font-weight="600" text-anchor="middle">${tuning[i]}</text>`;
+            }
+            chord.positions.forEach((pos, index) => {
+                const x = startX + (index * stringSpacing);
+                if (pos === -1) {
+                    svg += `<text x="${x}" y="${startY - 18}" fill="#ef4444" font-size="22" font-weight="bold" text-anchor="middle">✕</text>`;
+                } else if (pos === 0) {
+                    svg += `<circle cx="${x}" cy="${startY - 26}" r="7" fill="none" stroke="#f59e0b" stroke-width="2" />`;
+                } else {
+                    const y = startY + ((pos - 0.5) * fretSpacing);
+                    const finger = chord.fingers[index];
+                    svg += `<circle cx="${x}" cy="${y}" r="15" fill="#f59e0b" />`;
+                    if (finger) {
+                        svg += `<text x="${x}" y="${y + 1}" fill="#0f172a" font-size="15" font-weight="bold" text-anchor="middle" dominant-baseline="central">${finger}</text>`;
+                    }
+                }
+            });
+            svg += `</svg>`;
+            return svg;
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('chordsGrid');
+            grid.innerHTML = chordsData.map(chord => `
+                <div class="chord-card glass-panel rounded-2xl p-6 cursor-pointer group flex flex-col h-full" onclick="openModal('${chord.id}')">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-3xl font-bold text-white group-hover:text-amber-400 transition-colors">${chord.name}</h3>
+                            <p class="text-sm text-slate-400 mt-1">${chord.fullName}</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center group-hover:bg-amber-500/20 transition-colors">
+                            <svg class="w-5 h-5 text-slate-400 group-hover:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="h-36 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity mb-4">
+                        ${generateChordSVG(chord)}
+                    </div>
+                    <p class="text-sm text-slate-300 leading-relaxed mb-4 flex-grow">${chord.description}</p>
+                    <div class="flex flex-wrap gap-2 mt-auto">
+                        ${chord.songs.slice(0, 2).map(song => `
+                            <span class="text-[10px] px-2 py-1 rounded-md bg-slate-800 text-slate-400 border border-slate-700 truncate max-w-full">${song}</span>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderPatterns() {
+            const grid = document.getElementById('patternsGrid');
+            grid.innerHTML = pickingPatterns.map(pattern => `
+                <div class="pattern-card glass-panel rounded-2xl p-6 border border-slate-700/50 flex flex-col h-full">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-xl font-bold text-white">${pattern.name}</h3>
+                        <span class="text-xs font-bold px-2 py-1 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">Паттерн ${pattern.id}</span>
+                    </div>
+                    <p class="text-sm text-slate-400 mb-6 leading-relaxed flex-grow">${pattern.description}</p>
+                    <div class="mb-6">
+                        <div class="flex flex-wrap items-center gap-2 justify-center mb-4">
+                            ${pattern.sequence.map((step, idx) => `
+                                <div class="flex items-center gap-2">
+                                    <span class="px-3 py-1.5 rounded-lg ${step.includes('Бас') ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' : 'bg-slate-700 text-slate-200 border-slate-600'} font-bold border text-sm min-w-[40px] text-center">
+                                        ${step.replace(' (акцент)', '').replace('(ниж.)', '↓').replace('(верх.)', '↑')}
+                                    </span>
+                                    ${idx < pattern.sequence.length - 1 ? '<span class="text-slate-600 text-xs">→</span>' : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="flex flex-wrap gap-x-4 gap-y-2 justify-center text-xs text-slate-500">
+                            ${pattern.fingers.map((f, idx) => `<span>${f}</span>`).join('<span class="text-slate-700">•</span>')}
+                        </div>
+                    </div>
+                    <div class="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
+                        <div class="flex items-start gap-2">
+                            <svg class="w-4 h-4 text-amber-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <p class="text-xs text-slate-300 leading-relaxed"><span class="font-semibold text-amber-200">Совет:</span> ${pattern.tip}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderSongs() {
+            const grid = document.getElementById('songsGrid');
+            grid.innerHTML = songsData.map((song, idx) => `
+                <div class="song-card glass-panel rounded-2xl p-6 border border-slate-700/50 flex flex-col h-full relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-bl-full -mr-4 -mt-4 pointer-events-none"></div>
+                    
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-xs font-bold px-2 py-0.5 rounded ${song.difficulty === 'Легко' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20'}">${song.difficulty}</span>
+                                <span class="text-xs text-slate-500">#${idx + 1} для старта</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-white">${song.title}</h3>
+                            <p class="text-sm text-amber-400/80 font-medium">${song.artist}</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center border border-slate-700">
+                            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Прогрессия аккордов</p>
+                        <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-800 flex items-center justify-center gap-3 flex-wrap">
+                            ${song.progression.split(' → ').map(chordStr => {
+                                const chordName = chordStr.replace(/\s*\d*\s*раза?/i, '').trim();
+                                const chordData = chordsData.find(c => c.name.toLowerCase() === chordName.toLowerCase());
+                                return `
+                                    <span class="chord-badge px-3 py-1.5 rounded-lg bg-slate-800 text-slate-200 border border-slate-600 font-bold text-sm cursor-pointer" 
+                                          onclick="event.stopPropagation(); openModal('${chordData ? chordData.id : ''}')"
+                                          title="Нажмите, чтобы посмотреть схему аккорда ${chordName}">
+                                        ${chordStr}
+                                    </span>
+                                `;
+                            }).join(' <span class="text-slate-600">→</span> ')}
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Используемые аккорды</p>
+                        <div class="flex flex-wrap gap-2">
+                            ${song.chords.map(chord => {
+                                const chordData = chordsData.find(c => c.name === chord);
+                                return `
+                                    <button onclick="event.stopPropagation(); openModal('${chordData ? chordData.id : ''}')" 
+                                            class="w-8 h-8 rounded-full bg-slate-800 hover:bg-amber-500 hover:text-slate-900 text-slate-300 text-xs font-bold border border-slate-700 transition-all flex items-center justify-center"
+                                            title="Посмотреть схему аккорда ${chord}">
+                                        ${chord}
+                                    </button>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+
+                    <div class="mt-auto pt-4 border-t border-slate-800/50">
+                        <div class="flex items-start gap-2">
+                            <svg class="w-4 h-4 text-amber-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <p class="text-sm text-slate-300 leading-relaxed"><span class="font-semibold text-amber-200">Как играть:</span> ${song.tip}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openModal(chordId) {
+            if (!chordId) return;
+            const chord = chordsData.find(c => c.id === chordId);
+            if (!chord) return;
+
+            document.getElementById('modalTitle').textContent = chord.name;
+            document.getElementById('modalFullName').textContent = chord.fullName;
+            document.getElementById('modalDescription').textContent = chord.description;
+            document.getElementById('modalTip').textContent = chord.tip;
+            document.getElementById('svgContainer').innerHTML = generateChordSVG(chord);
+            
+            const songsContainer = document.getElementById('modalSongs');
+            songsContainer.innerHTML = chord.songs.map(song => `
+                <span class="px-3 py-1.5 rounded-full bg-slate-800 text-slate-300 text-sm border border-slate-700 hover:border-amber-500/50 transition-colors cursor-default">
+                    🎵 ${song}
+                </span>
+            `).join('');
+
+            const fingerGuide = document.getElementById('fingerGuide');
+            fingerGuide.innerHTML = chord.fingerGuide.map(step => `
+                <li class="flex items-start gap-3 text-slate-300">
+                    <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-amber-500 flex-shrink-0"></span>
+                    <span class="text-sm leading-relaxed">${step}</span>
+                </li>
+            `).join('');
+
+            const exercisesList = document.getElementById('exercisesList');
+            exercisesList.innerHTML = chord.exercises.map((ex, idx) => `
+                <label class="flex items-start gap-3 p-3 rounded-xl bg-slate-800/30 border border-slate-700/50 cursor-pointer hover:bg-slate-800/50 transition-colors group">
+                    <input type="checkbox" class="checkbox-custom hidden">
+                    <div class="mt-0.5 w-5 h-5 rounded border-2 border-slate-600 flex items-center justify-center flex-shrink-0 transition-colors group-hover:border-amber-500/50">
+                        <svg class="w-3.5 h-3.5 text-slate-900 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <span class="text-sm text-slate-300 leading-relaxed select-none">${ex}</span>
+                </label>
+            `).join('');
+
+            const modal = document.getElementById('chordModal');
+            const content = document.getElementById('modalContent');
+            modal.classList.remove('hidden');
+            
+            setTimeout(() => {
+                content.classList.remove('modal-enter');
+                content.classList.add('modal-enter-active');
+            }, 10);
+            
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('chordModal');
+            const content = document.getElementById('modalContent');
+            
+            content.classList.remove('modal-enter-active');
+            content.classList.add('modal-exit-active');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                content.classList.remove('modal-exit-active');
+                content.classList.add('modal-enter');
+                document.body.style.overflow = '';
+            }, 200);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        renderGrid();
+        renderPatterns();
+        renderSongs();
+    </script>
+</body>
+</html>
+
