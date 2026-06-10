@@ -102,13 +102,18 @@
         .strum-arrow:hover {
             transform: scale(1.15);
         }
-        .tab-btn {
+        .strum-pause {
+            animation: pulse-pause 2s infinite;
+        }
+        @keyframes pulse-pause {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
+        }
+        .legend-item {
             transition: all 0.2s ease;
         }
-        .tab-btn.active {
-            background-color: rgba(245, 158, 11, 0.2);
-            color: #fbbf24;
-            border-color: rgba(245, 158, 11, 0.5);
+        .legend-item:hover {
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -190,11 +195,38 @@
         <div class="mb-12">
             <h2 class="text-3xl font-bold text-white mb-3 flex items-center gap-3">
                 <span class="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center border border-amber-500/20 text-amber-400 text-sm font-bold">4</span>
-                10 Гитарных Боев
+                12 Гитарных Боев
             </h2>
-            <p class="text-slate-400 max-w-3xl mb-8 leading-relaxed">Бой — это техника игры, когда все струны аккорда играют одновременно в определённом ритме. Стрелка вниз (↓) — движение медиатора/пальцев вниз, стрелка вверх (↑) — вверх. Освойте эти 10 боев, чтобы играть любую песню.</p>
+            <p class="text-slate-400 max-w-3xl mb-4 leading-relaxed">Бой — это техника игры, когда все струны аккорда играют одновременно в определённом ритме. Стрелка вниз (↓) — движение к полу, стрелка вверх (↑) — к потолку. Пустой кружок (○) — пауза, рука движется в воздухе без касания струн.</p>
 
-            <div id="strumGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Legend -->
+            <div class="glass-panel rounded-2xl p-4 mb-8 border border-slate-700/50">
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Легенда обозначений</p>
+                <div class="flex flex-wrap gap-4 items-center justify-center">
+                    <div class="legend-item flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/20 cursor-default">
+                        <span class="w-7 h-7 rounded flex items-center justify-center bg-amber-500/20 text-amber-400 font-bold">↓</span>
+                        <span class="text-xs text-slate-300">Вниз (удар)</span>
+                    </div>
+                    <div class="legend-item flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-700/50 border border-slate-600 cursor-default">
+                        <span class="w-7 h-7 rounded flex items-center justify-center bg-slate-700 text-slate-200 font-bold">↑</span>
+                        <span class="text-xs text-slate-300">Вверх (удар)</span>
+                    </div>
+                    <div class="legend-item flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800/50 border border-slate-600 border-dashed cursor-default">
+                        <span class="w-7 h-7 rounded-full flex items-center justify-center border-2 border-dashed border-slate-500 text-slate-500 text-xs">○</span>
+                        <span class="text-xs text-slate-300">Пауза (пропуск)</span>
+                    </div>
+                    <div class="legend-item flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-500/20 border border-amber-500/30 cursor-default">
+                        <span class="w-7 h-7 rounded flex items-center justify-center bg-amber-500/30 text-amber-400 font-bold text-xs">Б</span>
+                        <span class="text-xs text-slate-300">Бас (большой палец)</span>
+                    </div>
+                    <div class="legend-item flex items-center gap-2 px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/20 cursor-default">
+                        <span class="w-7 h-7 rounded flex items-center justify-center bg-red-500/20 text-red-400 font-bold text-xs">⌇</span>
+                        <span class="text-xs text-slate-300">Глушение</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="strumGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Strum cards injected by JS -->
             </div>
         </div>
@@ -345,13 +377,8 @@
 
         const songsData = [
             {
-                id: 1,
-                title: "Звезда по имени Солнце",
-                artist: "Кино",
-                difficulty: "Легко",
-                tempo: "Средний",
-                chords: ["Am", "C", "D", "E"],
-                strumPattern: "Шестёрка (↓ ↓ ↑ ↑ ↓ ↑)",
+                id: 1, title: "Звезда по имени Солнце", artist: "Кино", difficulty: "Легко", tempo: "Средний",
+                chords: ["Am", "C", "D", "E"], strumPattern: "Шестёрка (↓ ↓ ↑ ↑ ↓ ↑)",
                 progression: "Am → C → D → E (повторяется 2 раза = куплет и припев)",
                 intro: "Самая культовая песня для начинающих. Использует ровно 4 аккорда из нашего списка и один из самых простых боев. Это идеальный старт.",
                 steps: [
@@ -361,17 +388,11 @@
                     { title: "Шаг 4: Добавьте пение или метроном", detail: "Включите метроном на 60 BPM. Играйте цепочку под ровный клик. Когда станет легко — включите оригинальную песню и попробуйте играть вместе с ней. У Виктора Цоя простой и ровный вокал, легко подстроиться." }
                 ],
                 tip: "Между D и E самый сложный переход. Практикуйте именно его отдельно. D — 4 струны, E — 6 струн. Помните: Dm здесь не используется, только D мажор!",
-                bestStrum: "Шестёрка",
-                listenLink: ""
+                bestStrum: "Шестёрка"
             },
             {
-                id: 2,
-                title: "Пачка сигарет",
-                artist: "Кино",
-                difficulty: "Легко",
-                tempo: "Медленный",
-                chords: ["Am", "Dm", "E"],
-                strumPattern: "Перебор «Шестёрка» (Бас-3-2-1-2-3)",
+                id: 2, title: "Пачка сигарет", artist: "Кино", difficulty: "Легко", tempo: "Медленный",
+                chords: ["Am", "Dm", "E"], strumPattern: "Перебор «Шестёрка» (Бас-3-2-1-2-3)",
                 progression: "Am → Dm → E → Am (зациклено всю песню)",
                 intro: "Ещё одна легендарная песня Цоя. Всего 3 аккорда! Идеально для тренировки перебора, потому что темп очень медленный и спокойный.",
                 steps: [
@@ -384,13 +405,8 @@
                 bestStrum: "Перебор Шестёрка"
             },
             {
-                id: 3,
-                title: "Батарейка",
-                artist: "Жуки",
-                difficulty: "Легко",
-                tempo: "Быстрый",
-                chords: ["Em", "C", "Am", "D"],
-                strumPattern: "Четвёрка (↓ ↓ ↑ ↑)",
+                id: 3, title: "Батарейка", artist: "Жуки", difficulty: "Легко", tempo: "Быстрый",
+                chords: ["Em", "C", "Am", "D"], strumPattern: "Четвёрка (↓ ↓ ↑ ↑)",
                 progression: "Em → C → Am → D (повторяется всю песню)",
                 intro: "Весёлая, энергичная песня, которую знают все. Идеальна для тренировки быстрого переключения аккордов, потому что темп бодрый.",
                 steps: [
@@ -403,13 +419,8 @@
                 bestStrum: "Четвёрка"
             },
             {
-                id: 4,
-                title: "Голубой вагон",
-                artist: "Детская (Шаинский)",
-                difficulty: "Очень легко",
-                tempo: "Медленный",
-                chords: ["Am", "Dm", "E"],
-                strumPattern: "Простая четвёрка (↓ ↓ ↑ ↑) или только вниз",
+                id: 4, title: "Голубой вагон", artist: "Детская (Шаинский)", difficulty: "Очень легко", tempo: "Медленный",
+                chords: ["Am", "Dm", "E"], strumPattern: "Простая четвёрка (↓ ↓ ↑ ↑) или только вниз",
                 progression: "Am → Am → Dm → Dm | E → E → Am → Am",
                 intro: "Простейшая детская песенка. Всего 3 аккорда, медленный темп, знакомая мелодия. Идеальна для самого первого знакомства с гитарой.",
                 steps: [
@@ -422,13 +433,8 @@
                 bestStrum: "Простой удар вниз"
             },
             {
-                id: 5,
-                title: "Изгиб гитары жёлтой",
-                artist: "А. Городницкий",
-                difficulty: "Легко",
-                tempo: "Медленный",
-                chords: ["Am", "Dm", "E"],
-                strumPattern: "Перебор «Четвёрка» (Бас-3-2-1)",
+                id: 5, title: "Изгиб гитары жёлтой", artist: "А. Городницкий", difficulty: "Легко", tempo: "Медленный",
+                chords: ["Am", "Dm", "E"], strumPattern: "Перебор «Четвёрка» (Бас-3-2-1)",
                 progression: "Am → Dm → E → Am (классическая минорная последовательность)",
                 intro: "Классика авторской песни. Очень медленная и мелодичная. Идеально подходит для первого знакомства с перебором, потому что можно играть не спеша.",
                 steps: [
@@ -441,13 +447,8 @@
                 bestStrum: "Перебор Четвёрка"
             },
             {
-                id: 6,
-                title: "Вечер на рейде",
-                artist: "Народная / Б. Мокроусов",
-                difficulty: "Легко",
-                tempo: "Средний",
-                chords: ["Am", "Dm", "E", "Am"],
-                strumPattern: "Шестёрка (↓ ↓ ↑ ↑ ↓ ↑)",
+                id: 6, title: "Вечер на рейде", artist: "Народная / Б. Мокроусов", difficulty: "Легко", tempo: "Средний",
+                chords: ["Am", "Dm", "E", "Am"], strumPattern: "Шестёрка (↓ ↓ ↑ ↑ ↓ ↑)",
                 progression: "Am → Dm → Am → E | Am → Dm → E → Am",
                 intro: "Красивая лирическая песня с классической гармонической структурой. Использует только Am, Dm, E — три самых важных минорных аккорда.",
                 steps: [
@@ -460,13 +461,8 @@
                 bestStrum: "Шестёрка"
             },
             {
-                id: 7,
-                title: "Кукушка",
-                artist: "Кино / Полина Гагарина",
-                difficulty: "Легко",
-                tempo: "Средний",
-                chords: ["Am", "C", "D", "E"],
-                strumPattern: "Перебор «Восьмёрка» (Бас-3-2-1-2-3-2-1)",
+                id: 7, title: "Кукушка", artist: "Кино / Полина Гагарина", difficulty: "Легко", tempo: "Средний",
+                chords: ["Am", "C", "D", "E"], strumPattern: "Перебор «Восьмёрка» (Бас-3-2-1-2-3-2-1)",
                 progression: "Am → C → D → E (как в «Звезде по имени Солнце», но другим перебором)",
                 intro: "Те же аккорды, что и в «Звезде по имени Солнце», но другая атмосфера. Медленная, эпичная, с перебором вместо боя. Отличный пример того, как одни и те же аккорды звучат по-разному.",
                 steps: [
@@ -479,13 +475,8 @@
                 bestStrum: "Перебор Восьмёрка"
             },
             {
-                id: 8,
-                title: "Седая ночь",
-                artist: "Юрий Шатунов",
-                difficulty: "Средне",
-                tempo: "Быстрый",
-                chords: ["Am", "Dm", "E", "G"],
-                strumPattern: "Энергичная шестёрка (↓ ↓ ↑ ↑ ↓ ↑)",
+                id: 8, title: "Седая ночь", artist: "Юрий Шатунов", difficulty: "Средне", tempo: "Быстрый",
+                chords: ["Am", "Dm", "E", "G"], strumPattern: "Энергичная шестёрка (↓ ↓ ↑ ↑ ↓ ↑)",
                 progression: "Am → Dm → E → G | Am → Dm → E → Am",
                 intro: "Энергичная танцевальная песня с быстрым темпом. Чуть сложнее предыдущих из-за темпа, но аккорды всё те же, которые вы уже знаете. Отличная тренировка скорости.",
                 steps: [
@@ -499,6 +490,8 @@
             }
         ];
 
+        // Стрелки: ↓=вниз, ↑=вверх, ○=пауза, Б=бас, ⌇=глушение
+        // Символы разделены пробелами для наглядности
         const strumPatterns = [
             {
                 id: 1,
@@ -512,83 +505,101 @@
             {
                 id: 2,
                 name: "Классическая шестёрка",
-                notation: "↓ ↓ ↑ ↑ ↓ ↑",
-                description: "Самый универсальный бой в мире. Используется в 80% дворовых и поп-песен. Освойте его — и вы сможете играть почти всё.",
-                tip: "Ключевой момент — третий удар (вверх) должен быть лёгким, как «эхо» предыдущего удара вниз. Не бейте слишком сильно.",
+                notation: "↓ ↓ ↑ ○ ↑ ↓ ↑",
+                description: "Самый универсальный бой в мире. Используется в 80% дворовых и поп-песен. Обратите внимание на паузу (○) — рука движется вверх, но НЕ касается струн.",
+                tip: "На месте паузы (○) кисть делает движение в воздухе, но не задевает струны. Это создаёт «воздух» в ритме. Третий удар (↓ после паузы) — самый важный, делайте его чётко.",
                 songs: "Звезда по имени Солнце, Вечер на рейде",
-                count: "1 и 2 и 3 и 4 и"
+                count: "1 и 2 ○ 3 и 4 и"
             },
             {
                 id: 3,
-                name: "Восьмёрка базовая",
-                notation: "↓ ↓ ↑ ↑ ↓ ↑ ↑ ↓",
-                description: "Расширенная версия шестёрки. Дольше и насыщеннее. Подходит для песен, где аккорды меняются реже, но нужно больше звука.",
-                tip: "Не торопитесь на последних двух ударах (↑ ↓). Они должны быть такими же ровными, как и первые. Считайте вслух!",
-                songs: "Кукушка (ускоренная версия)",
-                count: "1 и 2 и 3 и 4 и"
+                name: "Бой с глушением (Глушка)",
+                notation: "↓ ○ ↓ ⌇ ↑ ↓ ↑",
+                description: "В этом бое добавляется глушение (⌇) — ладонь правой руки касается струн, создавая перкуссионный звук «чик». Делает игру ритмичной и современной.",
+                tip: "После удара вниз сразу положите ребро ладони на струны (⌇), заглушив их. Затем резко уберите руку и сделайте удар вверх. Движение ладони — короткое и резкое.",
+                songs: "Рок-баллады, Поп-музыка",
+                count: "1 ○ 2 ⌇ 3 и 4 и"
             },
             {
                 id: 4,
-                name: "Бой с глушением (Глушка)",
-                notation: "↓ ↓ ↑ ⌇ ↓ ↑",
-                description: "В этом бое добавляется глушение (⌇) — ладонь правой руки слегка касается струн, создавая percussive звук. Делает игру более ритмичной и современной.",
-                tip: "После удара вверх сразу положите ребро ладони на струны, заглушив их. Затем сразу уберите руку и сделайте следующий удар вниз. Это создаёт эффект «чик».",
-                songs: "Рок-баллады, Поп-музыка",
-                count: "1 и 2 и 3 и 4 и"
+                name: "Бой с акцентом на бас",
+                notation: "Б ↓ ↓ ↑ ○ ↑ ↓ ↑",
+                description: "Первый удар — басовая струна (большим пальцем отдельно), затем классическая шестёрка. Создаёт объёмный аккомпанемент с ощущением бас-гитары.",
+                tip: "Большой палец играет басовую струну (Am=5-я, E=6-я, Dm=4-я), а остальные пальцы делают бой. Бас должен звучать отдельно и чётко, перед основным боем.",
+                songs: "Пачка сигарет (боящаяся версия)",
+                count: "Б 1 и 2 ○ 3 и 4"
             },
             {
                 id: 5,
-                name: "Бой с акцентом на бас",
-                notation: "Б ↓ ↓ ↑ ↑ ↓ ↑",
-                description: "Первый удар — басовая струна (отдельно большим пальцем), затем обычный бой. Создаёт ощущение «бас-гитары» и делает аккомпанемент объёмнее.",
-                tip: "Большой палец играет басовую струну (для Am — 5-я, для E — 6-я), а остальные пальцы делают обычный бой. Бас должен звучать отдельно, чётко.",
-                songs: "Пачка сигарет (боящаяся версия)",
-                count: "Б-1 и 2 и 3 и"
+                name: "Медленный балладный",
+                notation: "↓ ○ ○ ○ ↑ ○ ○ ○",
+                description: "Очень медленный бой с большими паузами. Каждый удар звучит отдельно и долго. Идеален для медленных, эмоциональных песен и романсов.",
+                tip: "Дайте каждому удару прозвучать полностью. Не глушите струны после удара. Пусть аккорд звучит и затухает естественно. Три паузы между ударами — это не пустота, а музыка!",
+                songs: "Голубой вагон, Изгиб гитары жёлтой",
+                count: "1 ○ ○ ○ 2 ○ ○ ○"
             },
             {
                 id: 6,
-                name: "Бой с пропуском",
-                notation: "↓ _ ↑ ↑ ↓ ↑",
-                description: "В этом бое один удар пропускается (обозначается _). Создаёт «воздушный», разреженный ритм. Отлично звучит в лиричных песнях.",
-                tip: "На месте пропуска рука делает движение, но НЕ касается струн. Это называется «призрачный удар». Он создаёт паузу, которая делает следующий удар более выразительным.",
-                songs: "Изгиб гитары жёлтой (боящаяся версия)",
-                count: "1 _ 2 и 3 и 4 и"
-            },
-            {
-                id: 7,
-                name: "Медленный балладный",
-                notation: "↓ _ _ ↑ _ _ ↑ _",
-                description: "Очень медленный бой с большими паузами. Идеален для медленных, эмоциональных песен. Каждый удар звучит отдельно и долго.",
-                tip: "Дайте каждому удару прозвучать полностью. Не глушите струны после удара. Пусть аккорд звучит и затухает естественно. Это создаёт атмосферу.",
-                songs: "Голубой вагон, Вечер на рейде",
-                count: "1 _ _ 2 _ _ 3 _ _"
-            },
-            {
-                id: 8,
                 name: "Энергичный рок-бой",
-                notation: "↓↓ ↓↓ ↑↑ ↓↓ ↑↑",
-                description: "Мощный, агрессивный бой с двойными ударами. Подходит для энергичных, быстрых песен. Звучит громко и уверенно.",
-                tip: "Играйте от локтя, а не от кисти. Движение должно быть широким и мощным. Не бойтесь бить сильно — это рок!",
-                songs: "Батарейка (ускоренная версия), Рок-песни",
+                notation: "↓ ↓ ↓ ↓ ↑ ↑ ↑ ↑",
+                description: "Мощный, агрессивный бой с восемью ударами. Подходит для энергичных, быстрых песен. Звучит громко и уверенно. Нет пауз — непрерывный поток звука.",
+                tip: "Играйте от локтя, а не от кисти. Движение должно быть широким и мощным. Не бойтесь бить сильно. Все 8 ударов должны быть ровными, как пулемётная очередь.",
+                songs: "Батарейка (ускоренная), Рок-песни",
                 count: "1 и 2 и 3 и 4 и"
             },
             {
-                id: 9,
+                id: 7,
+                name: "Бой «Волна»",
+                notation: "↓ ○ ↑ ↓ ○ ↑ ↓ ○",
+                description: "Красивый волнообразный бой. Удары чередуются с паузами, создавая ощущение приливов и отливов. Отлично подходит для лиричных песен среднего темпа.",
+                tip: "Каждый удар — это «гребень волны», каждая пауза — «впадина». Не торопитесь. Чувствуйте плавность переходов между ударом и паузой.",
+                songs: "Кукушка, Вечер на рейде",
+                count: "1 ○ 2 ○ 3 ○ 4 ○"
+            },
+            {
+                id: 8,
                 name: "Бой «Цыганочка»",
-                notation: "↓ ↓↑ ↓ ↑ ↓↑",
-                description: "Ритмичный бой с характерным «подпрыгивающим» ощущением. Часто используется в народных и цыганских песнях, а также в некоторых поп-композициях.",
-                tip: "Обратите внимание на группы: ↓ (отдельно), затем ↓↑ (быстро), затем ↓ (отдельно), затем ↑↓↑ (быстро). Это создаёт характерный ритм.",
+                notation: "↓ ↓↑ ○ ↓ ○ ↑↓↑",
+                description: "Ритмичный бой с характерным «подпрыгивающим» ощущением. Часто используется в народных и цыганских песнях. Паузы создают характерный ритмический рисунок.",
+                tip: "Обратите внимание на группы: ↓ (отдельно), затем ↓↑ (быстро), затем ○ (пауза), затем ↓ (отдельно), ○ (пауза), ↑↓↑ (быстро). Это создаёт характерный «цыганский» ритм.",
                 songs: "Народные песни, Цыганские мелодии",
-                count: "1 2-и 3 4-и"
+                count: "1 2-и ○ 3 ○ 4-и"
+            },
+            {
+                id: 9,
+                name: "Бой Розенбаума",
+                notation: "Б ↓ ○ ○ ↑ ○ ↓ ○",
+                description: "Медленный, задумчивый бой с акцентом на басовую струну. Характерен для песен Александра Розенбаума. Бас задаёт настроение, паузы создают пространство для вокала.",
+                tip: "Большой палец играет бас (отдельно, с акцентом). Затем удар вниз, длинная пауза, лёгкий удар вверх, пауза, удар вниз, пауза. Играйте очень медленно, с чувством.",
+                songs: "Песни Розенбаума, Авторская песня",
+                count: "Б 1 ○ ○ 2 ○ 3 ○"
             },
             {
                 id: 10,
-                name: "Бой с предварительным ударом",
-                notation: "(↑) ↓ ↓ ↑ ↑ ↓ ↑",
-                description: "Перед первым ударом вниз делается лёгкий «предварительный» удар вверх (в скобках). Это создаёт ощущение «разгона» и задаёт ритм перед началом такта.",
-                tip: "Предварительный удар (↑) делается очень легко, почти не касаясь струн — это скорее «замах». Затем полноценный удар вниз. Этот приём делает начало каждого такта более выразительным.",
-                songs: "Звезда по имени Солнце (продвинутая версия)",
-                count: "(и) 1 и 2 и 3 и 4 и"
+                name: "Бой Высоцкого",
+                notation: "Б ↓ ⌇ ↑ ○ ↓ ⌇ ↑",
+                description: "Характерный бой с глушением, который Владимир Высоцкий использовал в большинстве своих песен. Бас + удар вниз + глушение + удар вверх + пауза. Создаёт драйв и напор.",
+                tip: "Ключевой элемент — глушение (⌇) после удара вниз. Ладонь резко касается струн, создавая «чик». Затем сразу удар вверх. Пауза после него — передышка перед следующим ударом.",
+                songs: "Песни Высоцкого, Баллады",
+                count: "Б 1 ⌇ 2 ○ 3 ⌇ 4"
+            },
+            {
+                id: 11,
+                name: "Дворовый классический",
+                notation: "↓ ○ ↓ ↑ ○ ↑ ↓ ↑",
+                description: "Классический дворовый бой, который звучит у каждого костра. Простой, но с характерными паузами, которые делают его «живым» и не механическим.",
+                tip: "Секрет этого боя — в паузах. Не заполняйте их! Пустота между ударами — это часть музыки. Считайте вслух: «раз-пусто-три-и-пусто-и-раз-и».",
+                songs: "Дворовые песни, Костровые песни",
+                count: "1 ○ 2 и ○ и 3 и"
+            },
+            {
+                id: 12,
+                name: "Бой «Маятник»",
+                notation: "↓ ○ ↑ ○ ↓ ○ ↑ ○",
+                description: "Ровный, спокойный бой, где каждый удар разделён паузой. Рука движется как маятник: вниз-пауза-вверх-пауза. Идеален для самых первых тренировок боя.",
+                tip: "Это лучший бой для новичка, который только начинает. Рука движется постоянно (вниз-вверх-вниз-вверх), но касается струн только на каждом втором движении. Так вы тренируете ровный ритм.",
+                songs: "Любые медленные песни для старта",
+                count: "1 ○ 2 ○ 3 ○ 4 ○"
             }
         ];
 
@@ -629,6 +640,28 @@
             });
             svg += `</svg>`;
             return svg;
+        }
+
+        function renderStrumNotation(notation) {
+            const symbols = notation.trim().split(/\s+/);
+            return symbols.map(sym => {
+                if (sym === '↓') {
+                    return `<span class="strum-arrow inline-flex items-center justify-center w-9 h-9 rounded-lg bg-amber-500/20 text-amber-400 border border-amber-500/30 font-bold text-lg cursor-default" title="Вниз">↓</span>`;
+                }
+                if (sym === '↑') {
+                    return `<span class="strum-arrow inline-flex items-center justify-center w-9 h-9 rounded-lg bg-slate-700 text-slate-200 border border-slate-600 font-bold text-lg cursor-default" title="Вверх">↑</span>`;
+                }
+                if (sym === '○') {
+                    return `<span class="strum-pause strum-arrow inline-flex items-center justify-center w-9 h-9 rounded-full border-2 border-dashed border-slate-500/60 text-slate-500 text-xs cursor-default font-bold" title="Пауза (рука движется, но не касается струн)">○</span>`;
+                }
+                if (sym === 'Б') {
+                    return `<span class="strum-arrow inline-flex items-center justify-center w-9 h-9 rounded-lg bg-amber-500/30 text-amber-400 border border-amber-500/40 font-bold text-sm cursor-default" title="Бас — большой палец">Б</span>`;
+                }
+                if (sym === '⌇') {
+                    return `<span class="strum-arrow inline-flex items-center justify-center w-9 h-9 rounded-lg bg-red-500/20 text-red-400 border border-red-500/30 font-bold text-sm cursor-default" title="Глушение — ладонь на струны">⌇</span>`;
+                }
+                return `<span class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-slate-800/30 text-slate-600 border border-slate-800 font-bold text-sm cursor-default">${sym}</span>`;
+            }).join('');
         }
 
         function renderGrid() {
@@ -787,30 +820,22 @@
         function renderStrums() {
             const grid = document.getElementById('strumGrid');
             grid.innerHTML = strumPatterns.map(pattern => {
-                const arrows = pattern.notation.split(' ').map(char => {
-                    if (char === '↓') return `<span class="strum-arrow inline-flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 border border-amber-500/30 font-bold text-lg cursor-default" title="Вниз">↓</span>`;
-                    if (char === '↑') return `<span class="strum-arrow inline-flex items-center justify-center w-8 h-8 rounded-lg bg-slate-700 text-slate-200 border border-slate-600 font-bold text-lg cursor-default" title="Вверх">↑</span>`;
-                    if (char === '_') return `<span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-slate-800/30 text-slate-600 border border-slate-800 font-bold text-sm cursor-default" title="Пропуск">_</span>`;
-                    if (char === 'Б') return `<span class="strum-arrow inline-flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/30 text-amber-400 border border-amber-500/40 font-bold text-sm cursor-default" title="Бас">Б</span>`;
-                    if (char === '⌇') return `<span class="strum-arrow inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-500/20 text-red-400 border border-red-500/30 font-bold text-sm cursor-default" title="Глушение">⌇</span>`;
-                    if (char.startsWith('(')) return `<span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-slate-800/50 text-slate-500 border border-slate-700 font-bold text-xs cursor-default" title="Предварительный удар">${char}</span>`;
-                    return `<span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-slate-800/30 text-slate-600 border border-slate-800 font-bold text-sm cursor-default">${char}</span>`;
-                }).join('');
+                const arrowsHtml = renderStrumNotation(pattern.notation);
 
                 return `
                     <div class="strum-card glass-panel rounded-2xl p-6 border border-slate-700/50 flex flex-col h-full">
-                        <div class="flex items-center justify-between mb-3">
-                            <h3 class="text-xl font-bold text-white">${pattern.name}</h3>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-white">${pattern.name}</h3>
                             <span class="text-xs font-bold px-2 py-1 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">Бой ${pattern.id}</span>
                         </div>
                         
-                        <div class="flex items-center justify-center gap-2 p-4 rounded-xl bg-slate-900/50 border border-slate-800 mb-5 flex-wrap">
-                            ${arrows}
+                        <div class="flex items-center justify-center gap-1.5 p-4 rounded-xl bg-slate-900/50 border border-slate-800 mb-5 flex-wrap">
+                            ${arrowsHtml}
                         </div>
 
                         <p class="text-sm text-slate-400 mb-4 leading-relaxed flex-grow">${pattern.description}</p>
 
-                        <div class="space-y-3">
+                        <div class="space-y-3 mt-auto">
                             <div class="p-3 rounded-lg bg-slate-800/30 border border-slate-700/30">
                                 <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Счёт</p>
                                 <p class="text-sm text-slate-300 font-mono">${pattern.count}</p>
