@@ -21,10 +21,10 @@
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .chord-card, .pattern-card, .song-card {
+        .chord-card, .pattern-card, .song-card, .strum-card {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .chord-card:hover, .pattern-card:hover, .song-card:hover {
+        .chord-card:hover, .pattern-card:hover, .song-card:hover, .strum-card:hover {
             transform: translateY(-4px);
             border-color: rgba(245, 158, 11, 0.5);
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
@@ -89,6 +89,27 @@
             color: #fbbf24;
             cursor: pointer;
         }
+        .step-card {
+            transition: all 0.3s ease;
+        }
+        .step-card:hover {
+            background: rgba(30, 41, 59, 0.9);
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+        .strum-arrow {
+            transition: transform 0.15s ease;
+        }
+        .strum-arrow:hover {
+            transform: scale(1.15);
+        }
+        .tab-btn {
+            transition: all 0.2s ease;
+        }
+        .tab-btn.active {
+            background-color: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+            border-color: rgba(245, 158, 11, 0.5);
+        }
     </style>
 </head>
 <body class="text-slate-200 min-h-screen flex flex-col">
@@ -104,7 +125,7 @@
                 </div>
                 <div>
                     <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-200 to-amber-500">Академия Гитары</h1>
-                    <p class="text-xs text-slate-400 font-medium tracking-wide">АККОРДЫ • ПЕРЕБОРЫ • ПЕСНИ</p>
+                    <p class="text-xs text-slate-400 font-medium tracking-wide">АККОРДЫ • ПЕРЕБОРЫ • ПЕСНИ • БОИ</p>
                 </div>
             </div>
             <div class="hidden md:block text-sm text-slate-400 text-right">
@@ -149,16 +170,32 @@
         <!-- Divider -->
         <div class="w-full h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent my-16"></div>
 
-        <!-- Section 3: Songs -->
-        <div class="mb-12">
+        <!-- Section 3: Songs (DETAILED) -->
+        <div class="mb-16">
             <h2 class="text-3xl font-bold text-white mb-3 flex items-center gap-3">
                 <span class="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center border border-amber-500/20 text-amber-400 text-sm font-bold">3</span>
-                Практика: 8 песен для новичков
+                Пошаговое обучение: 8 простых песен
             </h2>
-            <p class="text-slate-400 max-w-3xl mb-8 leading-relaxed">Примените изученные аккорды и переборы на практике. Эти 8 песен идеально подходят для старта: они используют только пройденные аккорды и простые ритмические рисунки. Нажмите на аккорд в карточке, чтобы быстро посмотреть его схему.</p>
+            <p class="text-slate-400 max-w-3xl mb-8 leading-relaxed">Подробные пошаговые инструкции для каждой песни. Все песни используют только 8 изученных аккордов. Нажмите на аккорд, чтобы быстро посмотреть его схему. Следуйте шагам от простого к сложному.</p>
 
-            <div id="songsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div id="songsGrid" class="space-y-8">
                 <!-- Song cards injected by JS -->
+            </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="w-full h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent my-16"></div>
+
+        <!-- Section 4: Strumming -->
+        <div class="mb-12">
+            <h2 class="text-3xl font-bold text-white mb-3 flex items-center gap-3">
+                <span class="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center border border-amber-500/20 text-amber-400 text-sm font-bold">4</span>
+                10 Гитарных Боев
+            </h2>
+            <p class="text-slate-400 max-w-3xl mb-8 leading-relaxed">Бой — это техника игры, когда все струны аккорда играют одновременно в определённом ритме. Стрелка вниз (↓) — движение медиатора/пальцев вниз, стрелка вверх (↑) — вверх. Освойте эти 10 боев, чтобы играть любую песню.</p>
+
+            <div id="strumGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Strum cards injected by JS -->
             </div>
         </div>
 
@@ -307,14 +344,252 @@
         ];
 
         const songsData = [
-            { title: "Звезда по имени Солнце", artist: "Кино", difficulty: "Легко", chords: ["Am", "C", "D", "E"], progression: "Am → C → D → E (2 раза)", tip: "Используйте простой бой 'Вниз-Вниз-Вверх-Вверх-Вниз-Вверх'. Меняйте аккорды каждые 2 такта. Это самая важная песня для отработки перехода C → D." },
-            { title: "Пачка сигарет", artist: "Кино", difficulty: "Легко", chords: ["Am", "Dm", "E"], progression: "Am → Dm → E → E", tip: "Отлично звучит с перебором 'Шестерка' (Бас-3-2-1-2-3). Следите за чистым звуком на аккорде Dm, не задевая 6-ю струну." },
-            { title: "30 лет", artist: "Сектор Газа", difficulty: "Легко", chords: ["Am", "Dm", "E"], progression: "Am → Dm → E → Am", tip: "Энергичный бой. Акцент на первую долю каждого такта. Аккорд E играйте мощно, по всем 6 струнам, чтобы создать драйв." },
-            { title: "Тополиный пух", artist: "Иванушки Int.", difficulty: "Легко", chords: ["Am", "Dm", "E"], progression: "Am → Dm → E → Am", tip: "Медленный темп. Идеально для отработки плавного и бесшумного переключения между Am и Dm без отрыва руки от грифа." },
-            { title: "Оранжевое настроение", artist: "Чайф", difficulty: "Средне", chords: ["D", "G", "A"], progression: "D → G → A → D", tip: "Солнечный мажорный звук. Используйте аккорд A (Ля мажор) и следите, чтобы пальцы не глушили соседние струны. Играйте бодро." },
-            { title: "Районы-кварталы", artist: "Звери", difficulty: "Средне", chords: ["C", "G", "Am", "E"], progression: "C → G → Am → E", tip: "Быстрый темп. Тренируйте переход C → G заранее. Можно использовать упрощенный бой только вниз на первые порах, чтобы успевать менять аккорды." },
-            { title: "Кукушка", artist: "Кино / П. Гагарина", difficulty: "Легко", chords: ["Am", "C", "D", "E"], progression: "Am → C → D → E", tip: "Та же прогрессия, что и в 'Звезде по имени Солнце', но играется более размеренно, широко и с чувством. Отлично подходит для перебора 'Восьмерка'." },
-            { title: "Выхода нет", artist: "Сплин", difficulty: "Средне", chords: ["Am", "C", "G", "D"], progression: "Am → C → G → D", tip: "Упрощенная версия без баррэ. Играйте перебором 'Восьмерка' или 'Шестерка' для создания характерного атмосферного и меланхоличного звучания." }
+            {
+                id: 1,
+                title: "Звезда по имени Солнце",
+                artist: "Кино",
+                difficulty: "Легко",
+                tempo: "Средний",
+                chords: ["Am", "C", "D", "E"],
+                strumPattern: "Шестёрка (↓ ↓ ↑ ↑ ↓ ↑)",
+                progression: "Am → C → D → E (повторяется 2 раза = куплет и припев)",
+                intro: "Самая культовая песня для начинающих. Использует ровно 4 аккорда из нашего списка и один из самых простых боев. Это идеальный старт.",
+                steps: [
+                    { title: "Шаг 1: Выучите аккорды Am и C", detail: "Начните только с двух аккордов. Поставьте Am, сыграйте бой один раз. Затем поставьте C, сыграйте бой один раз. Медленно переключайтесь Am → C → Am → C. Повторяйте 5 минут, пока рука не запомнит движения." },
+                    { title: "Шаг 2: Добавьте D и E", detail: "Точно так же отработайте переходы D → E → D → E. Обратите внимание: аккорд D — треугольник на 4-х верхних струнах, а E — все 6 струн звучат. Не торопитесь." },
+                    { title: "Шаг 3: Соберите всю цепочку", detail: "Сыграйте всю последовательность: Am (1 такт) → C (1 такт) → D (1 такт) → E (1 такт). Каждый аккорд играйте ровно один такт боя. Сначала очень медленно, затем постепенно ускоряйтесь." },
+                    { title: "Шаг 4: Добавьте пение или метроном", detail: "Включите метроном на 60 BPM. Играйте цепочку под ровный клик. Когда станет легко — включите оригинальную песню и попробуйте играть вместе с ней. У Виктора Цоя простой и ровный вокал, легко подстроиться." }
+                ],
+                tip: "Между D и E самый сложный переход. Практикуйте именно его отдельно. D — 4 струны, E — 6 струн. Помните: Dm здесь не используется, только D мажор!",
+                bestStrum: "Шестёрка",
+                listenLink: ""
+            },
+            {
+                id: 2,
+                title: "Пачка сигарет",
+                artist: "Кино",
+                difficulty: "Легко",
+                tempo: "Медленный",
+                chords: ["Am", "Dm", "E"],
+                strumPattern: "Перебор «Шестёрка» (Бас-3-2-1-2-3)",
+                progression: "Am → Dm → E → Am (зациклено всю песню)",
+                intro: "Ещё одна легендарная песня Цоя. Всего 3 аккорда! Идеально для тренировки перебора, потому что темп очень медленный и спокойный.",
+                steps: [
+                    { title: "Шаг 1: Отработайте Am и Dm", detail: "Эти два аккорда очень похожи — оба минорные. Разница: Am использует 2-й лад, Dm — 1-й и 3-й лады. Переключайтесь между ними медленно, следя за чистотой звука на каждой струне." },
+                    { title: "Шаг 2: Добавьте аккорд E", detail: "E — мажорный аккорд, звучит ярко и мощно. Переход Dm → E — ключевой момент песни. Обратите внимание: при Dm 6-я струна глушится, при E — звучат все 6. Это даёт красивый контраст." },
+                    { title: "Шаг 3: Освойте перебор «Шестёрка»", detail: "Большой палец: басовая струна (для Am — 5-я, для Dm — 4-я, для E — 6-я). Затем указательный (3-я), средний (2-я), безымянный (1-я), средний (2-я), указательный (3-я). Играйте плавно, как волны." },
+                    { title: "Шаг 4: Соберите всё вместе", detail: "Am (перебор 1 раз) → Dm (перебор 1 раз) → E (перебор 1 раз) → Am (перебор 1 раз). Медленно! Когда пальцы запомнят — ускоряйтесь до темпа оригинала." }
+                ],
+                tip: "Главная сложность — большой палец должен правильно находить басовую струну для каждого аккорда. Am = 5-я, Dm = 4-я, E = 6-я. Запомните это правило, оно пригодится в сотнях песен.",
+                bestStrum: "Перебор Шестёрка"
+            },
+            {
+                id: 3,
+                title: "Батарейка",
+                artist: "Жуки",
+                difficulty: "Легко",
+                tempo: "Быстрый",
+                chords: ["Em", "C", "Am", "D"],
+                strumPattern: "Четвёрка (↓ ↓ ↑ ↑)",
+                progression: "Em → C → Am → D (повторяется всю песню)",
+                intro: "Весёлая, энергичная песня, которую знают все. Идеальна для тренировки быстрого переключения аккордов, потому что темп бодрый.",
+                steps: [
+                    { title: "Шаг 1: Начните с Em", detail: "Em — самый простой аккорд (всего 2 пальца). Убедитесь, что все 6 струн звучат чисто. Это ваша «база» — к ней вы будете возвращаться постоянно." },
+                    { title: "Шаг 2: Em → C", detail: "Переход Em → C требует растяжки. При Em пальцы на 2-м ладу, при C — на 1-м, 2-м и 3-м. Тренируйте этот переход отдельно 3-5 минут." },
+                    { title: "Шаг 3: Am → D", detail: "Am (ля минор) и D (ре мажор) — два разных характера. Am звучит грустно, D — светло. Переход между ними простой, но следите, чтобы D звучал только на 4-х верхних струнах." },
+                    { title: "Шаг 4: Полный круг + бой", detail: "Em → C → Am → D → Em. Играйте боем «Четвёрка»: вниз-вниз-вверх-вверх. Сначала медленно, затем ускоряйтесь до темпа песни." }
+                ],
+                tip: "Не пытайтесь сразу играть быстро! Начните с темпа в 2 раза медленнее оригинала. Когда аккорды будут меняться без задержек, постепенно ускоряйтесь. Быстрый бой — это результат мышечной памяти, а не скорости рук.",
+                bestStrum: "Четвёрка"
+            },
+            {
+                id: 4,
+                title: "Голубой вагон",
+                artist: "Детская (Шаинский)",
+                difficulty: "Очень легко",
+                tempo: "Медленный",
+                chords: ["Am", "Dm", "E"],
+                strumPattern: "Простая четвёрка (↓ ↓ ↑ ↑) или только вниз",
+                progression: "Am → Am → Dm → Dm | E → E → Am → Am",
+                intro: "Простейшая детская песенка. Всего 3 аккорда, медленный темп, знакомая мелодия. Идеальна для самого первого знакомства с гитарой.",
+                steps: [
+                    { title: "Шаг 1: Только Am", detail: "Поставьте Am и сыграйте 4 удара вниз (по одному на каждый счёт: раз-два-три-четыре). Убедитесь, что аккорд звучит чисто. Повторите 5 раз." },
+                    { title: "Шаг 2: Добавьте Dm", detail: "2 такта Am, затем 2 такта Dm. Каждый такт = 4 удара вниз. Медленно переключайтесь между аккордами. Это основа первой половины песни." },
+                    { title: "Шаг 3: Добавьте E", detail: "Вторая половина: 2 такта E, затем 2 такта Am. E звучит мощно, все 6 струн. Это создаёт ощущение «разрешения» — песня возвращается домой." },
+                    { title: "Шаг 4: Соедините и напойте", detail: "Am(2) → Dm(2) → E(2) → Am(2). Напевайте мелодию, играя аккорды. Пойте вслух — это помогает чувствовать ритм и делает игру музыкальной, а не механической." }
+                ],
+                tip: "Если бой пока не получается, играйте просто одним ударом вниз на каждый такт. Это нормально для самого начала! Главное — чисто менять аккорды в нужный момент.",
+                bestStrum: "Простой удар вниз"
+            },
+            {
+                id: 5,
+                title: "Изгиб гитары жёлтой",
+                artist: "А. Городницкий",
+                difficulty: "Легко",
+                tempo: "Медленный",
+                chords: ["Am", "Dm", "E"],
+                strumPattern: "Перебор «Четвёрка» (Бас-3-2-1)",
+                progression: "Am → Dm → E → Am (классическая минорная последовательность)",
+                intro: "Классика авторской песни. Очень медленная и мелодичная. Идеально подходит для первого знакомства с перебором, потому что можно играть не спеша.",
+                steps: [
+                    { title: "Шаг 1: Настройте настроение", detail: "Эта песня играется спокойно, задумчиво. Не торопитесь. Поставьте Am и дайте ему прозвучать. Прислушайтесь к минорному, грустному звуку." },
+                    { title: "Шаг 2: Освойте перебор «Четвёрка»", detail: "Большой палец играет бас (для Am — 5-я струна). Затем указательный (3-я), средний (2-я), безымянный (1-я). Медленно, чисто. Повторите на одном аккорде 10 раз." },
+                    { title: "Шаг 3: Перебор + смена аккорда", detail: "Сыграйте перебор на Am, затем поставьте Dm и сыграйте перебор на Dm. Бас меняется: Am = 5-я струна, Dm = 4-я струна. Большой палец должен находить правильную басовую струну." },
+                    { title: "Шаг 4: Полный цикл", detail: "Am (перебор) → Dm (перебор) → E (перебор) → Am (перебор). Бас для E — 6-я струна. Играйте медленно, наслаждаясь звуком." }
+                ],
+                tip: "В этой песне перебор важнее боя. Не пытайтесь играть быстро. Каждый звук перебора должен быть чётким и отдельным. Это создаёт ту самую «романсовую» атмосферу.",
+                bestStrum: "Перебор Четвёрка"
+            },
+            {
+                id: 6,
+                title: "Вечер на рейде",
+                artist: "Народная / Б. Мокроусов",
+                difficulty: "Легко",
+                tempo: "Средний",
+                chords: ["Am", "Dm", "E", "Am"],
+                strumPattern: "Шестёрка (↓ ↓ ↑ ↑ ↓ ↑)",
+                progression: "Am → Dm → Am → E | Am → Dm → E → Am",
+                intro: "Красивая лирическая песня с классической гармонической структурой. Использует только Am, Dm, E — три самых важных минорных аккорда.",
+                steps: [
+                    { title: "Шаг 1: Первая фраза", detail: "Am (1 такт) → Dm (1 такт) → Am (1 такт) → E (1 такт). Сыграйте эту фразу боем «Шестёрка». Обратите внимание: песня начинается и заканчивается на Am — это «дом»." },
+                    { title: "Шаг 2: Вторая фраза", detail: "Am (1 такт) → Dm (1 такт) → E (1 такт) → Am (1 такт). Эта фраза завершает музыкальную мысль. Переход E → Am — самый важный, он создаёт ощущение завершения." },
+                    { title: "Шаг 3: Соедините обе фразы", detail: "Первая фраза + Вторая фраза = полный куплет. Играйте без остановки между фразами. Держите ровный ритм боя." },
+                    { title: "Шаг 4: Добавьте динамику", detail: "Первую фразу играйте тише (не бейте по струнам слишком сильно). Вторую фразу играйте чуть громче. Это создаст музыкальное развитие, даже если вы играете одни и те же аккорды." }
+                ],
+                tip: "Обратите внимание на переход E → Am. E — мажорный (яркий), Am — минорный (грустный). Этот контраст — основа музыки. Сыграйте этот переход отдельно 10 раз, чтобы почувствовать разницу.",
+                bestStrum: "Шестёрка"
+            },
+            {
+                id: 7,
+                title: "Кукушка",
+                artist: "Кино / Полина Гагарина",
+                difficulty: "Легко",
+                tempo: "Средний",
+                chords: ["Am", "C", "D", "E"],
+                strumPattern: "Перебор «Восьмёрка» (Бас-3-2-1-2-3-2-1)",
+                progression: "Am → C → D → E (как в «Звезде по имени Солнце», но другим перебором)",
+                intro: "Те же аккорды, что и в «Звезде по имени Солнце», но другая атмосфера. Медленная, эпичная, с перебором вместо боя. Отличный пример того, как одни и те же аккорды звучат по-разному.",
+                steps: [
+                    { title: "Шаг 1: Вспомните аккорды", detail: "Am → C → D → E — это вы уже умеете из первой песни. Проверьте: все 4 аккорда звучат чисто. Если есть дребезжание — исправьте постановку пальцев." },
+                    { title: "Шаг 2: Освойте перебор «Восьмёрка»", detail: "Бас → 3-я → 2-я → 1-я → 2-я → 3-я → 2-я → 1-я. Это длинный перебор, но очень красивый. Сначала медленно на одном аккорде Am. Повторите 15 раз, пока рука не запомнит паттерн." },
+                    { title: "Шаг 3: Перебор + смена аккордов", detail: "Am (1 полный перебор) → C (1 полный перебор) → D (1 полный перебор) → E (1 полный перебор). Очень медленно! Один перебор = один аккорд." },
+                    { title: "Шаг 4: Играйте с чувством", detail: "Эта песня требует эмоциональности. Не играйте механически. Делайте акцент на басовой струне (первой ноте каждого перебора). Пусть звук «плывёт» и заполняет пространство." }
+                ],
+                tip: "Секрет красивого перебора в этой песне — не скорость, а плавность. Каждый палец должен «скользить» по струнам, а не щипать их резко. Представьте, что вы гладите струны, а не бьёте по ним.",
+                bestStrum: "Перебор Восьмёрка"
+            },
+            {
+                id: 8,
+                title: "Седая ночь",
+                artist: "Юрий Шатунов",
+                difficulty: "Средне",
+                tempo: "Быстрый",
+                chords: ["Am", "Dm", "E", "G"],
+                strumPattern: "Энергичная шестёрка (↓ ↓ ↑ ↑ ↓ ↑)",
+                progression: "Am → Dm → E → G | Am → Dm → E → Am",
+                intro: "Энергичная танцевальная песня с быстрым темпом. Чуть сложнее предыдущих из-за темпа, но аккорды всё те же, которые вы уже знаете. Отличная тренировка скорости.",
+                steps: [
+                    { title: "Шаг 1: Медленная подготовка", detail: "Не включайте сразу быстрый темп! Сыграйте Am → Dm → E → G очень медленно. Убедитесь, что каждый аккорд звучит чисто. G — самый «растянутый» аккорд из четырёх, уделите ему внимание." },
+                    { title: "Шаг 2: Бой в медленном темпе", detail: "Сыграйте каждый аккорд боем «Шестёрка» в очень медленном темпе. Am(1 такт) → Dm(1 такт) → E(1 такт) → G(1 такт). Главное — ровный ритм, а не скорость." },
+                    { title: "Шаг 3: Постепенное ускорение", detail: "Каждый раз играйте чуть быстрее. Не прыгайте с медленного на быстрый темп — ускоряйтесь постепенно, как на эскалаторе. Если запутались — замедлитесь и начните снова." },
+                    { title: "Шаг 4: Полная версия", detail: "Первая половина: Am → Dm → E → G. Вторая половина: Am → Dm → E → Am. Играйте обе половины подряд без остановки. Это полный куплет + припев." }
+                ],
+                tip: "G — самый сложный аккорд в этой песне (требует растяжки). Если не получается быстро переключиться на G, попробуйте упрощённый вариант: вместо мизинца на 1-й струне используйте безымянный. Звук будет почти такой же, но переход легче.",
+                bestStrum: "Энергичная шестёрка"
+            }
+        ];
+
+        const strumPatterns = [
+            {
+                id: 1,
+                name: "Простая четвёрка",
+                notation: "↓ ↓ ↑ ↑",
+                description: "Самый базовый бой. Два удара вниз, два удара вверх. Идеален для первых песен и медленных композиций.",
+                tip: "Держите руку расслабленной. Удары вниз должны быть чуть сильнее, чем вверх — это создаёт естественный ритм.",
+                songs: "Батарейка, Голубой вагон",
+                count: "1 и 2 и 3 и 4 и"
+            },
+            {
+                id: 2,
+                name: "Классическая шестёрка",
+                notation: "↓ ↓ ↑ ↑ ↓ ↑",
+                description: "Самый универсальный бой в мире. Используется в 80% дворовых и поп-песен. Освойте его — и вы сможете играть почти всё.",
+                tip: "Ключевой момент — третий удар (вверх) должен быть лёгким, как «эхо» предыдущего удара вниз. Не бейте слишком сильно.",
+                songs: "Звезда по имени Солнце, Вечер на рейде",
+                count: "1 и 2 и 3 и 4 и"
+            },
+            {
+                id: 3,
+                name: "Восьмёрка базовая",
+                notation: "↓ ↓ ↑ ↑ ↓ ↑ ↑ ↓",
+                description: "Расширенная версия шестёрки. Дольше и насыщеннее. Подходит для песен, где аккорды меняются реже, но нужно больше звука.",
+                tip: "Не торопитесь на последних двух ударах (↑ ↓). Они должны быть такими же ровными, как и первые. Считайте вслух!",
+                songs: "Кукушка (ускоренная версия)",
+                count: "1 и 2 и 3 и 4 и"
+            },
+            {
+                id: 4,
+                name: "Бой с глушением (Глушка)",
+                notation: "↓ ↓ ↑ ⌇ ↓ ↑",
+                description: "В этом бое добавляется глушение (⌇) — ладонь правой руки слегка касается струн, создавая percussive звук. Делает игру более ритмичной и современной.",
+                tip: "После удара вверх сразу положите ребро ладони на струны, заглушив их. Затем сразу уберите руку и сделайте следующий удар вниз. Это создаёт эффект «чик».",
+                songs: "Рок-баллады, Поп-музыка",
+                count: "1 и 2 и 3 и 4 и"
+            },
+            {
+                id: 5,
+                name: "Бой с акцентом на бас",
+                notation: "Б ↓ ↓ ↑ ↑ ↓ ↑",
+                description: "Первый удар — басовая струна (отдельно большим пальцем), затем обычный бой. Создаёт ощущение «бас-гитары» и делает аккомпанемент объёмнее.",
+                tip: "Большой палец играет басовую струну (для Am — 5-я, для E — 6-я), а остальные пальцы делают обычный бой. Бас должен звучать отдельно, чётко.",
+                songs: "Пачка сигарет (боящаяся версия)",
+                count: "Б-1 и 2 и 3 и"
+            },
+            {
+                id: 6,
+                name: "Бой с пропуском",
+                notation: "↓ _ ↑ ↑ ↓ ↑",
+                description: "В этом бое один удар пропускается (обозначается _). Создаёт «воздушный», разреженный ритм. Отлично звучит в лиричных песнях.",
+                tip: "На месте пропуска рука делает движение, но НЕ касается струн. Это называется «призрачный удар». Он создаёт паузу, которая делает следующий удар более выразительным.",
+                songs: "Изгиб гитары жёлтой (боящаяся версия)",
+                count: "1 _ 2 и 3 и 4 и"
+            },
+            {
+                id: 7,
+                name: "Медленный балладный",
+                notation: "↓ _ _ ↑ _ _ ↑ _",
+                description: "Очень медленный бой с большими паузами. Идеален для медленных, эмоциональных песен. Каждый удар звучит отдельно и долго.",
+                tip: "Дайте каждому удару прозвучать полностью. Не глушите струны после удара. Пусть аккорд звучит и затухает естественно. Это создаёт атмосферу.",
+                songs: "Голубой вагон, Вечер на рейде",
+                count: "1 _ _ 2 _ _ 3 _ _"
+            },
+            {
+                id: 8,
+                name: "Энергичный рок-бой",
+                notation: "↓↓ ↓↓ ↑↑ ↓↓ ↑↑",
+                description: "Мощный, агрессивный бой с двойными ударами. Подходит для энергичных, быстрых песен. Звучит громко и уверенно.",
+                tip: "Играйте от локтя, а не от кисти. Движение должно быть широким и мощным. Не бойтесь бить сильно — это рок!",
+                songs: "Батарейка (ускоренная версия), Рок-песни",
+                count: "1 и 2 и 3 и 4 и"
+            },
+            {
+                id: 9,
+                name: "Бой «Цыганочка»",
+                notation: "↓ ↓↑ ↓ ↑ ↓↑",
+                description: "Ритмичный бой с характерным «подпрыгивающим» ощущением. Часто используется в народных и цыганских песнях, а также в некоторых поп-композициях.",
+                tip: "Обратите внимание на группы: ↓ (отдельно), затем ↓↑ (быстро), затем ↓ (отдельно), затем ↑↓↑ (быстро). Это создаёт характерный ритм.",
+                songs: "Народные песни, Цыганские мелодии",
+                count: "1 2-и 3 4-и"
+            },
+            {
+                id: 10,
+                name: "Бой с предварительным ударом",
+                notation: "(↑) ↓ ↓ ↑ ↑ ↓ ↑",
+                description: "Перед первым ударом вниз делается лёгкий «предварительный» удар вверх (в скобках). Это создаёт ощущение «разгона» и задаёт ритм перед началом такта.",
+                tip: "Предварительный удар (↑) делается очень легко, почти не касаясь струн — это скорее «замах». Затем полноценный удар вниз. Этот приём делает начало каждого такта более выразительным.",
+                songs: "Звезда по имени Солнце (продвинутая версия)",
+                count: "(и) 1 и 2 и 3 и 4 и"
+            }
         ];
 
         function generateChordSVG(chord) {
@@ -420,67 +695,142 @@
 
         function renderSongs() {
             const grid = document.getElementById('songsGrid');
-            grid.innerHTML = songsData.map((song, idx) => `
-                <div class="song-card glass-panel rounded-2xl p-6 border border-slate-700/50 flex flex-col h-full relative overflow-hidden">
-                    <div class="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-bl-full -mr-4 -mt-4 pointer-events-none"></div>
-                    
-                    <div class="flex items-start justify-between mb-4">
-                        <div>
-                            <div class="flex items-center gap-2 mb-1">
-                                <span class="text-xs font-bold px-2 py-0.5 rounded ${song.difficulty === 'Легко' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20'}">${song.difficulty}</span>
-                                <span class="text-xs text-slate-500">#${idx + 1} для старта</span>
+            grid.innerHTML = songsData.map(song => `
+                <div class="song-card glass-panel rounded-2xl border border-slate-700/50 overflow-hidden">
+                    <div class="p-6 sm:p-8">
+                        <div class="flex items-start justify-between mb-6">
+                            <div class="flex items-center gap-4">
+                                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-600/20 flex items-center justify-center border border-amber-500/30">
+                                    <svg class="w-7 h-7 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <h3 class="text-2xl font-bold text-white">${song.title}</h3>
+                                        <span class="text-xs font-bold px-2 py-0.5 rounded ${song.difficulty === 'Очень легко' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : song.difficulty === 'Легко' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20'}">${song.difficulty}</span>
+                                    </div>
+                                    <p class="text-sm text-amber-400/80 font-medium">${song.artist}</p>
+                                </div>
                             </div>
-                            <h3 class="text-xl font-bold text-white">${song.title}</h3>
-                            <p class="text-sm text-amber-400/80 font-medium">${song.artist}</p>
                         </div>
-                        <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center border border-slate-700">
-                            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
-                            </svg>
-                        </div>
-                    </div>
 
-                    <div class="mb-5">
-                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Прогрессия аккордов</p>
-                        <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-800 flex items-center justify-center gap-3 flex-wrap">
-                            ${song.progression.split(' → ').map(chordStr => {
-                                const chordName = chordStr.replace(/\s*\d*\s*раза?/i, '').trim();
-                                const chordData = chordsData.find(c => c.name.toLowerCase() === chordName.toLowerCase());
-                                return `
-                                    <span class="chord-badge px-3 py-1.5 rounded-lg bg-slate-800 text-slate-200 border border-slate-600 font-bold text-sm cursor-pointer" 
-                                          onclick="event.stopPropagation(); openModal('${chordData ? chordData.id : ''}')"
-                                          title="Нажмите, чтобы посмотреть схему аккорда ${chordName}">
-                                        ${chordStr}
-                                    </span>
-                                `;
-                            }).join(' <span class="text-slate-600">→</span> ')}
+                        <div class="grid md:grid-cols-3 gap-4 mb-6">
+                            <div class="p-3 rounded-xl bg-slate-800/30 border border-slate-700/50">
+                                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Аккорды</p>
+                                <div class="flex gap-2 flex-wrap">
+                                    ${song.chords.map(chord => {
+                                        const chordData = chordsData.find(c => c.name === chord);
+                                        return `<button onclick="openModal('${chordData ? chordData.id : ''}')" class="chord-badge px-2.5 py-1 rounded-lg bg-slate-800 text-slate-200 border border-slate-600 font-bold text-sm">${chord}</button>`;
+                                    }).join('')}
+                                </div>
+                            </div>
+                            <div class="p-3 rounded-xl bg-slate-800/30 border border-slate-700/50">
+                                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Бой / Перебор</p>
+                                <p class="text-sm text-slate-300 font-medium">${song.strumPattern}</p>
+                            </div>
+                            <div class="p-3 rounded-xl bg-slate-800/30 border border-slate-700/50">
+                                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Темп</p>
+                                <p class="text-sm text-slate-300 font-medium">${song.tempo}</p>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="mb-4">
-                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Используемые аккорды</p>
-                        <div class="flex flex-wrap gap-2">
-                            ${song.chords.map(chord => {
-                                const chordData = chordsData.find(c => c.name === chord);
-                                return `
-                                    <button onclick="event.stopPropagation(); openModal('${chordData ? chordData.id : ''}')" 
-                                            class="w-8 h-8 rounded-full bg-slate-800 hover:bg-amber-500 hover:text-slate-900 text-slate-300 text-xs font-bold border border-slate-700 transition-all flex items-center justify-center"
-                                            title="Посмотреть схему аккорда ${chord}">
-                                        ${chord}
-                                    </button>
-                                `;
-                            }).join('')}
+                        <div class="mb-6">
+                            <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Прогрессия</p>
+                            <div class="p-4 rounded-xl bg-amber-500/5 border border-amber-500/20 flex items-center justify-center gap-3 flex-wrap">
+                                ${song.progression.split(' → ').map(chordStr => {
+                                    const chordName = chordStr.replace(/\s*\d*\s*раза?/i, '').replace(/\(\d+\)/, '').trim();
+                                    const chordData = chordsData.find(c => c.name.toLowerCase() === chordName.toLowerCase());
+                                    return `
+                                        <span class="chord-badge px-3 py-1.5 rounded-lg bg-slate-800 text-slate-200 border border-slate-600 font-bold text-sm cursor-pointer" 
+                                              onclick="openModal('${chordData ? chordData.id : ''}')"
+                                              title="Нажмите, чтобы посмотреть схему аккорда ${chordName}">
+                                            ${chordStr}
+                                        </span>
+                                    `;
+                                }).join(' <span class="text-slate-600 text-lg">→</span> ')}
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="mt-auto pt-4 border-t border-slate-800/50">
-                        <div class="flex items-start gap-2">
-                            <svg class="w-4 h-4 text-amber-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            <p class="text-sm text-slate-300 leading-relaxed"><span class="font-semibold text-amber-200">Как играть:</span> ${song.tip}</p>
+                        <div class="mb-6">
+                            <p class="text-sm text-slate-200 leading-relaxed italic">${song.intro}</p>
+                        </div>
+
+                        <div class="space-y-4">
+                            <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Пошаговое обучение</p>
+                            ${song.steps.map((step, idx) => `
+                                <div class="step-card p-4 rounded-xl bg-slate-800/20 border border-slate-700/30">
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center flex-shrink-0 border border-amber-500/30">
+                                            <span class="text-amber-400 font-bold text-sm">${idx + 1}</span>
+                                        </div>
+                                        <div class="flex-grow">
+                                            <h4 class="font-bold text-slate-200 mb-1">${step.title}</h4>
+                                            <p class="text-sm text-slate-400 leading-relaxed">${step.detail}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <div class="mt-6 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+                            <div class="flex items-start gap-2">
+                                <svg class="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                                <p class="text-sm text-slate-300 leading-relaxed"><span class="font-semibold text-amber-200">Совет:</span> ${song.tip}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             `).join('');
+        }
+
+        function renderStrums() {
+            const grid = document.getElementById('strumGrid');
+            grid.innerHTML = strumPatterns.map(pattern => {
+                const arrows = pattern.notation.split(' ').map(char => {
+                    if (char === '↓') return `<span class="strum-arrow inline-flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 border border-amber-500/30 font-bold text-lg cursor-default" title="Вниз">↓</span>`;
+                    if (char === '↑') return `<span class="strum-arrow inline-flex items-center justify-center w-8 h-8 rounded-lg bg-slate-700 text-slate-200 border border-slate-600 font-bold text-lg cursor-default" title="Вверх">↑</span>`;
+                    if (char === '_') return `<span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-slate-800/30 text-slate-600 border border-slate-800 font-bold text-sm cursor-default" title="Пропуск">_</span>`;
+                    if (char === 'Б') return `<span class="strum-arrow inline-flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/30 text-amber-400 border border-amber-500/40 font-bold text-sm cursor-default" title="Бас">Б</span>`;
+                    if (char === '⌇') return `<span class="strum-arrow inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-500/20 text-red-400 border border-red-500/30 font-bold text-sm cursor-default" title="Глушение">⌇</span>`;
+                    if (char.startsWith('(')) return `<span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-slate-800/50 text-slate-500 border border-slate-700 font-bold text-xs cursor-default" title="Предварительный удар">${char}</span>`;
+                    return `<span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-slate-800/30 text-slate-600 border border-slate-800 font-bold text-sm cursor-default">${char}</span>`;
+                }).join('');
+
+                return `
+                    <div class="strum-card glass-panel rounded-2xl p-6 border border-slate-700/50 flex flex-col h-full">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-xl font-bold text-white">${pattern.name}</h3>
+                            <span class="text-xs font-bold px-2 py-1 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">Бой ${pattern.id}</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-center gap-2 p-4 rounded-xl bg-slate-900/50 border border-slate-800 mb-5 flex-wrap">
+                            ${arrows}
+                        </div>
+
+                        <p class="text-sm text-slate-400 mb-4 leading-relaxed flex-grow">${pattern.description}</p>
+
+                        <div class="space-y-3">
+                            <div class="p-3 rounded-lg bg-slate-800/30 border border-slate-700/30">
+                                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Счёт</p>
+                                <p class="text-sm text-slate-300 font-mono">${pattern.count}</p>
+                            </div>
+                            
+                            <div class="p-3 rounded-lg bg-slate-800/30 border border-slate-700/30">
+                                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Подходит для</p>
+                                <p class="text-sm text-slate-300">${pattern.songs}</p>
+                            </div>
+
+                            <div class="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
+                                <div class="flex items-start gap-2">
+                                    <svg class="w-4 h-4 text-amber-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    <p class="text-xs text-slate-300 leading-relaxed"><span class="font-semibold text-amber-200">Совет:</span> ${pattern.tip}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
 
         function openModal(chordId) {
@@ -556,6 +906,7 @@
         renderGrid();
         renderPatterns();
         renderSongs();
+        renderStrums();
     </script>
 </body>
 </html>
